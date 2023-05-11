@@ -6,28 +6,30 @@ import java.sql.SQLException;
 
 public class Util {
     private static Connection conn = null;
-    private static Util instance = null;
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/users";
+    private static final String USER = "root";
+    private static final String PASS = "root";
 
     private Util() {
+    }
+
+    public static Connection getConnection() {
         try {
             if (null == conn || conn.isClosed()) {
-                conn = DriverManager
-                        .getConnection("jdbc:mysql://localhost:3306/users", "root", "root");
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return conn;
+    }
+    public static void closeConnection() {
+        try {
+            if (null != conn && !conn.isClosed()) {
+                conn.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-    public static Util getInstance() {
-        if (null == instance) {
-            instance = new Util();
-        }
-        return instance;
-    }
-
-    public static Connection getConnection() {
-        return conn;
-    }
-
 }
