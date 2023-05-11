@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-
-    private static final Util utilInstance = Util.getInstance();
-    private static final SessionFactory sessionFactory = utilInstance.getSessionFactory();
+    private static final SessionFactory sessionFactory = Util.getSessionFactory();
     private Transaction tx = null;
 
     public UserDaoHibernateImpl() {
@@ -25,7 +23,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
-            session.createSQLQuery("CREATE TABLE IF NOT EXISTS " + utilInstance.getTableName("User") +
+            session.createSQLQuery("CREATE TABLE IF NOT EXISTS " + Util.getTableName("User") +
                             "(id bigint not null auto_increment, age tinyint, last_name varchar(255), name varchar(255), " +
                             "primary key (id))")
                     .executeUpdate();
@@ -42,7 +40,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
-            session.createSQLQuery("DROP TABLE IF EXISTS " + utilInstance.getTableName("User"))
+            session.createSQLQuery("DROP TABLE IF EXISTS " + Util.getTableName("User"))
                     .executeUpdate();
             tx.commit();
         } catch (PersistenceException e) {
@@ -91,7 +89,6 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-
         return new ArrayList<>();
     }
 
@@ -99,7 +96,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-            session.createSQLQuery("TRUNCATE TABLE " + utilInstance.getTableName("User"))
+            session.createSQLQuery("TRUNCATE TABLE " + Util.getTableName("User"))
                     .executeUpdate();
             tx.commit();
         } catch (PersistenceException e) {

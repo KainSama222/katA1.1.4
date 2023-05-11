@@ -10,19 +10,14 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.service.ServiceRegistry;
 
 public class Util {
-    private static Util instance = null;
     private static SessionFactory sessionFactory;
     private static Metadata metadata;
 
+    private Util() {
 
-    public static Util getInstance() {
-        if (null == instance) {
-            instance = new Util();
-        }
-        return instance;
     }
 
-    private Util() {
+    public static SessionFactory getSessionFactory() {
         if (null == sessionFactory) {
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySetting(Environment.USE_SQL_COMMENTS, false)
@@ -31,9 +26,6 @@ public class Util {
                     .build();
             sessionFactory = makeSessionFactory(serviceRegistry);
         }
-    }
-
-    public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
@@ -45,7 +37,7 @@ public class Util {
         return metadata.buildSessionFactory();
     }
 
-    public String getTableName(String entityName) throws NullPointerException {
+    public static String getTableName(String entityName) throws NullPointerException {
         if (null == metadata) {
             throw new NullPointerException("Metadata is null");
         }
